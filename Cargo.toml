@@ -2,7 +2,7 @@
 name = "balancebeam"
 version = "0.1.0"
 authors = ["Arnaud Pansard-Besson <apansardbesson@myges.com"]
-edition = "2021"
+edition = "2018"
 
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
 
@@ -14,12 +14,15 @@ log = "0.4"
 env_logger = "0.11.2"
 pretty_env_logger = "0.5.0"
 threadpool = "1.8"
-tokio = { version = "1.36.0", features = ["full"] }
-rand = "0.8.5"
+tokio = { version = "1.36.0", features = ["full", "net"] }
+tokio-stream = { version = "0.1.14", features = ["net"] }
+rand = "0.8.0"
 parking_lot = "0.12.1"
+futures = "0.3"
+
 
 [dev-dependencies]
 nix = "0.28.0"
-hyper = "1.2.0"
+hyper = { version = "0.14", features = ["full"] }
 reqwest = "0.11.24"
-async-trait = "0.1"
+async-trait = "0.1.50"

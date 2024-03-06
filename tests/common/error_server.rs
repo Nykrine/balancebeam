@@ -2,6 +2,7 @@ use crate::common::server::Server;
 use async_trait::async_trait;
 use hyper::service::{make_service_fn, service_fn};
 use hyper::{Body, Response};
+use hyper::StatusCode;
 use rand::Rng;
 use std::sync::{atomic, Arc};
 use tokio::sync::oneshot;
@@ -14,9 +15,9 @@ struct ServerState {
 #[allow(dead_code)]
 async fn return_error() -> Result<Response<Body>, hyper::Error> {
     Ok(Response::builder()
-        .status(http::StatusCode::INTERNAL_SERVER_ERROR)
-        .body(Body::empty())
-        .unwrap())
+    .status(StatusCode::INTERNAL_SERVER_ERROR)
+    .body(Body::empty())
+    .unwrap())
 }
 
 pub struct ErrorServer {
@@ -30,7 +31,7 @@ impl ErrorServer {
     #[allow(dead_code)]
     pub async fn new() -> ErrorServer {
         let mut rng = rand::thread_rng();
-        ErrorServer::new_at_address(format!("127.0.0.1:{}", rng.gen_range(1024, 65535))).await
+        ErrorServer::new_at_address(format!("127.0.0.1:{}", rng.gen_range(1024..65535))).await
     }
 
     #[allow(dead_code)]
