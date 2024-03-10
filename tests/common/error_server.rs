@@ -7,6 +7,14 @@ use rand::Rng;
 use std::sync::{atomic, Arc};
 use tokio::sync::oneshot;
 
+/// The `ServerState` struct contains a field `requests_received` of type `atomic::AtomicUsize` to track
+/// the number of requests received by the server.
+/// 
+/// Properties:
+/// 
+/// * `requests_received`: The `requests_received` property in the `ServerState` struct represents the
+/// number of requests that have been received by the server. It is of type `atomic::AtomicUsize`, which
+/// is an atomic integer type provided by the `std::sync::atomic` module in Rust. This type allows
 #[derive(Debug)]
 struct ServerState {
     pub requests_received: atomic::AtomicUsize,

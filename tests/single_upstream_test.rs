@@ -3,6 +3,8 @@ mod common;
 use common::{init_logging, BalanceBeam, EchoServer, Server};
 use std::sync::Arc;
 
+/// The `setup` function initializes logging, creates an `EchoServer`, and a `BalanceBeam`, returning
+/// both instances.
 async fn setup() -> (BalanceBeam, EchoServer) {
     init_logging();
     let upstream = EchoServer::new().await;

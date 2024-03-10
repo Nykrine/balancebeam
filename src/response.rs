@@ -24,6 +24,21 @@ pub enum Error {
 /// Extracts the Content-Length header value from the provided response. Returns Ok(Some(usize)) if
 /// the Content-Length is present and valid, Ok(None) if Content-Length is not present, or
 /// Err(Error) if Content-Length is present but invalid.
+/// The function `get_content_length` parses the content-length header from an HTTP response into a
+/// usize or returns an error if it cannot be parsed.
+/// 
+/// Arguments:
+/// 
+/// * `response`: The function `get_content_length` takes an HTTP response as input and attempts to
+/// extract the content length from the response headers. If the "content-length" header is present, it
+/// tries to parse its value as a `usize` and returns it as an `Option<usize>`. If the header is
+/// 
+/// Returns:
+/// 
+/// The function `get_content_length` returns a `Result` containing either `Some(usize)` if the
+/// content-length header exists and can be parsed as a `usize`, or `None` if the content-length header
+/// does not exist. If there are any errors during parsing or if the content-length header is invalid,
+/// it returns an `Error` enum variant `InvalidContentLength`.
 fn get_content_length(response: &http::Response<Vec<u8>>) -> Result<Option<usize>, Error> {
     // Look for content-length header
     if let Some(header_value) = response.headers().get("content-length") {
@@ -107,6 +122,20 @@ async fn read_headers(stream: &mut TcpStream) -> Result<http::Response<Vec<u8>>,
 
 /// This function reads the body for a response from the stream. If the Content-Length header is
 /// present, it reads that many bytes; otherwise, it reads bytes until the connection is closed.
+/// The `read_body` function in Rust reads the response body from a TCP stream, ensuring it matches the
+/// expected content length and does not exceed a maximum body size.
+/// 
+/// Arguments:
+/// 
+/// * `stream`: The `stream` parameter in the `read_body` function is a mutable reference to a
+/// `TcpStream`. This stream is used to read data from the network connection.
+/// * `response`: The `response` parameter in the `read_body` function is a mutable reference to an HTTP
+/// response object that contains a vector of bytes representing the response body. The function reads
+/// the response body from a TCP stream and populates this response object with the received bytes.
+/// 
+/// Returns:
+/// 
+/// The `read_body` function returns a `Result<(), Error>`.
 async fn read_body(
     stream: &mut TcpStream,
     response: &mut http::Response<Vec<u8>>,
@@ -153,6 +182,22 @@ async fn read_body(
 
 /// This function reads and returns an HTTP response from a stream, returning an Error if the server
 /// closes the connection prematurely or sends an invalid response.
+/// The function `read_from_stream` reads from a TCP stream and constructs an HTTP response with
+/// optional body based on the request method and response status.
+/// 
+/// Arguments:
+/// 
+/// * `stream`: The `stream` parameter in the `read_from_stream` function is a mutable reference to a
+/// `TcpStream`. This stream is used to read data from a TCP connection.
+/// * `request_method`: The `request_method` parameter in the `read_from_stream` function is of type
+/// `&http::Method`, which represents the HTTP method of the request being processed. It is used to
+/// determine whether to read the body of the response based on certain conditions related to the
+/// request method and the response status
+/// 
+/// Returns:
+/// 
+/// The `read_from_stream` function returns a `Result` containing a `http::Response<Vec<u8>>` or an
+/// `Error`.
 pub async fn read_from_stream(
     stream: &mut TcpStream,
     request_method: &http::Method,
@@ -171,6 +216,18 @@ pub async fn read_from_stream(
 }
 
 /// This function serializes a response to bytes and writes those bytes to the provided stream.
+/// The function `write_to_stream` in Rust asynchronously writes an HTTP response to a TCP stream.
+/// 
+/// Arguments:
+/// 
+/// * `response`: The `response` parameter in the `write_to_stream` function is of type
+/// `http::Response<Vec<u8>>`. It represents an HTTP response containing a vector of bytes as the body.
+/// * `stream`: The `stream` parameter in the `write_to_stream` function is a mutable reference to a
+/// `TcpStream`. This stream is used to write the HTTP response data to a TCP stream.
+/// 
+/// Returns:
+/// 
+/// The `write_to_stream` function returns a `Result<(), std::io::Error>`.
 pub async fn write_to_stream(
     response: &http::Response<Vec<u8>>,
     stream: &mut TcpStream,
@@ -193,6 +250,20 @@ pub async fn write_to_stream(
     Ok(())
 }
 
+/// The function `format_response_line` takes an HTTP response and formats it into a string with the
+/// response version, status code, and reason phrase.
+/// 
+/// Arguments:
+/// 
+/// * `response`: The function `format_response_line` takes a reference to an HTTP response object as
+/// input. The response object contains information such as the HTTP version, status code, and reason
+/// phrase. The function formats this information into a string in the format "{:?} {} {}", where the
+/// placeholders are filled with the HTTP
+/// 
+/// Returns:
+/// 
+/// The function `format_response_line` returns a formatted string that includes the HTTP version,
+/// status code, and reason phrase of the provided HTTP response.
 pub fn format_response_line(response: &http::Response<Vec<u8>>) -> String {
     format!(
         "{:?} {} {}",

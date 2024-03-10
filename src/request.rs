@@ -7,6 +7,9 @@ const MAX_BODY_SIZE: usize = 10000000;
 const MAX_NUM_HEADERS: usize = 32;
 
 #[derive(Debug)]
+/// The `pub enum Error` defines a custom error type in Rust. It allows the code to represent different
+/// kinds of errors that can occur during the execution of the program. Each variant of the `Error` enum
+/// represents a specific type of error that can be encountered in the HTTP request handling logic.
 pub enum Error {
     /// Client hung up before sending a complete request. IncompleteRequest contains the number of
     /// bytes that were successfully read before the client hung up
@@ -186,7 +189,21 @@ pub async fn read_from_stream(stream: &mut TcpStream) -> Result<http::Request<Ve
     Ok(request)
 }
 
-/// This function serializes a request to bytes and writes those bytes to the provided stream.
+// This function serializes a request to bytes and writes those bytes to the provided stream.
+/// The `write_to_stream` function in Rust asynchronously writes an HTTP request to a TCP stream.
+/// 
+/// Arguments:
+/// 
+/// * `request`: The `request` parameter in the `write_to_stream` function is of type
+/// `&http::Request<Vec<u8>>`, which represents an HTTP request containing a vector of bytes as the
+/// body.
+/// * `stream`: The `stream` parameter in the `write_to_stream` function is a mutable reference to a
+/// `TcpStream`. This stream is used to write data to a TCP stream, typically in the context of sending
+/// an HTTP request over a network connection.
+/// 
+/// Returns:
+/// 
+/// The `write_to_stream` function returns a `Result<(), std::io::Error>`.
 pub async fn write_to_stream(
     request: &http::Request<Vec<u8>>,
     stream: &mut TcpStream,
@@ -209,6 +226,18 @@ pub async fn write_to_stream(
     Ok(())
 }
 
+/// The function `format_request_line` formats an HTTP request line using the method, URI, and version
+/// of the request.
+/// 
+/// Arguments:
+/// 
+/// * `request`: The `request` parameter is an HTTP request object of type `http::Request<Vec<u8>>`. It
+/// contains information such as the HTTP method, URI, and version of the request.
+/// 
+/// Returns:
+/// 
+/// The function `format_request_line` returns a formatted string that includes the HTTP method, URI,
+/// and version of the provided HTTP request.
 pub fn format_request_line(request: &http::Request<Vec<u8>>) -> String {
     format!(
         "{} {} {:?}",

@@ -5,6 +5,21 @@ use common::{init_logging, BalanceBeam, EchoServer, ErrorServer, Server};
 use std::time::Duration;
 use tokio::time::sleep;
 
+/// The `setup_with_params` function in Rust initializes a set of upstream servers with specified
+/// parameters and returns a balance beam and a vector of server instances.
+/// 
+/// Arguments:
+/// 
+/// * `n_upstreams`: The `n_upstreams` parameter specifies the number of upstream servers that will be
+/// created and added to the load balancer.
+/// * `active_health_check_interval`: The `active_health_check_interval` parameter in the
+/// `setup_with_params` function is an optional parameter that specifies the interval (in seconds) at
+/// which active health checks should be performed on the upstream servers. If this parameter is
+/// provided with a value, the system will periodically send health check requests to the
+/// * `max_requests_per_minute`: The `max_requests_per_minute` parameter in the `setup_with_params`
+/// function represents the maximum number of requests allowed per minute for the servers in the setup.
+/// This parameter allows you to control the rate at which requests can be sent to the upstream servers
+/// to prevent overwhelming them with too many requests in a
 async fn setup_with_params(
     n_upstreams: usize,
     active_health_check_interval: Option<usize>,
@@ -32,6 +47,13 @@ async fn setup_with_params(
     (balancebeam, upstreams)
 }
 
+/// The `setup` function in Rust asynchronously sets up a balance beam and a vector of server instances
+/// with a specified number of upstreams.
+/// 
+/// Arguments:
+/// 
+/// * `n_upstreams`: The `n_upstreams` parameter represents the number of upstream servers that will be
+/// set up in the system.
 async fn setup(n_upstreams: usize) -> (BalanceBeam, Vec<Box<dyn Server>>) {
     setup_with_params(n_upstreams, None, None).await
 }
@@ -80,6 +102,18 @@ async fn test_load_distribution() {
     log::info!("All done :)");
 }
 
+/// The function `try_failover` in Rust sends initial requests, kills one of the upstream servers, and
+/// then continues to send requests to test failover functionality.
+/// 
+/// Arguments:
+/// 
+/// * `balancebeam`: The `balancebeam` parameter in the `try_failover` function is a reference to a
+/// `BalanceBeam` object. This object likely represents a load balancer or proxy server that is
+/// responsible for distributing incoming requests to multiple upstream servers.
+/// * `upstreams`: The `upstreams` parameter in the `try_failover` function is a mutable reference to a
+/// vector of boxes containing objects that implement the `Server` trait. These objects represent the
+/// upstream servers that the `BalanceBeam` load balancer is managing. The function simulates a failover
+/// scenario by
 async fn try_failover(balancebeam: &BalanceBeam, upstreams: &mut Vec<Box<dyn Server>>) {
     // Send some initial requests. Everything should work
     log::info!("Sending some initial requests. These should definitely work.");
@@ -242,6 +276,9 @@ async fn test_active_health_checks_restore_failed_upstream() {
 
 /// Enable rate limiting and ensure that requests fail after sending more than the threshold
 #[tokio::test]
+/// Defining an asynchronous Rust function named `test_rate_limiting`. This function
+/// is likely intended to test rate limiting functionality, but the actual implementation details are
+/// not provided in the code snippet.
 async fn test_rate_limiting() {
     let n_upstreams = 1;
     let rate_limit_threshold = 5;
