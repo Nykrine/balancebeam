@@ -26,8 +26,6 @@ pub enum Error {
 /// Extracts the Content-Length header value from the provided request. Returns Ok(Some(usize)) if
 /// the Content-Length is present and valid, Ok(None) if Content-Length is not present, or
 /// Err(Error) if Content-Length is present but invalid.
-///
-/// You won't need to touch this function.
 fn get_content_length(request: &http::Request<Vec<u8>>) -> Result<Option<usize>, Error> {
     // Look for content-length header
     if let Some(header_value) = request.headers().get("content-length") {
@@ -48,8 +46,6 @@ fn get_content_length(request: &http::Request<Vec<u8>>) -> Result<Option<usize>,
 /// This function appends to a header value (adding a new header if the header is not already
 /// present). This is used to add the client's IP address to the end of the X-Forwarded-For list,
 /// or to add a new X-Forwarded-For header if one is not already present.
-///
-/// You won't need to touch this function.
 pub fn extend_header_value(
     request: &mut http::Request<Vec<u8>>,
     name: &'static str,
@@ -71,9 +67,7 @@ pub fn extend_header_value(
 ///
 /// * If there is a complete and valid request in the buffer, returns Ok(Some(http::Request))
 /// * If there is an incomplete but valid-so-far request in the buffer, returns Ok(None)
-/// * If there is data in the buffer that is definitely not a valid HTTP request, returns Err(Error)
-///
-/// You won't need to touch this function.
+/// * If there is data in the buffer that is definitely not a valid HTTP request, returns Err(Error).
 fn parse_request(buffer: &[u8]) -> Result<Option<(http::Request<Vec<u8>>, usize)>, Error> {
     let mut headers = [httparse::EMPTY_HEADER; MAX_NUM_HEADERS];
     let mut req = httparse::Request::new(&mut headers);
@@ -101,8 +95,6 @@ fn parse_request(buffer: &[u8]) -> Result<Option<(http::Request<Vec<u8>>, usize)
 /// be called in order to read the request body (for a POST request).
 ///
 /// Returns Ok(http::Request) if a valid request is received, or Error if not.
-///
-/// You will need to modify this function in Milestone 2.
 async fn read_headers(stream: &mut TcpStream) -> Result<http::Request<Vec<u8>>, Error> {
     // Try reading the headers from the request. We may not receive all the headers in one shot
     // (e.g. we might receive the first few bytes of a request, and then the rest follows later).
@@ -138,8 +130,6 @@ async fn read_headers(stream: &mut TcpStream) -> Result<http::Request<Vec<u8>>, 
 /// This function reads the body for a request from the stream. The client only sends a body if the
 /// Content-Length header is present; this function reads that number of bytes from the stream. It
 /// returns Ok(()) if successful, or Err(Error) if Content-Length bytes couldn't be read.
-///
-/// You will need to modify this function in Milestone 2.
 async fn read_body(
     stream: &mut TcpStream,
     request: &mut http::Request<Vec<u8>>,
@@ -182,8 +172,6 @@ async fn read_body(
 
 /// This function reads and returns an HTTP request from a stream, returning an Error if the client
 /// closes the connection prematurely or sends an invalid request.
-///
-/// You will need to modify this function in Milestone 2.
 pub async fn read_from_stream(stream: &mut TcpStream) -> Result<http::Request<Vec<u8>>, Error> {
     // Read headers
     let mut request = read_headers(stream).await?;
@@ -199,8 +187,6 @@ pub async fn read_from_stream(stream: &mut TcpStream) -> Result<http::Request<Ve
 }
 
 /// This function serializes a request to bytes and writes those bytes to the provided stream.
-///
-/// You will need to modify this function in Milestone 2.
 pub async fn write_to_stream(
     request: &http::Request<Vec<u8>>,
     stream: &mut TcpStream,

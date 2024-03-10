@@ -46,8 +46,6 @@ struct CmdOptions {
 
 /// Contains information about the state of balancebeam (e.g. what servers we are currently proxying
 /// to, what servers have failed, rate limiting counts, etc.)
-///
-/// You should add fields to this struct in later milestones.
 struct ProxyState {
     /// How frequently we check whether upstream servers are alive (Milestone 4)
     active_health_check_interval: usize,
@@ -82,7 +80,7 @@ async fn main() {
     }
 
     // Start listening for connections
-    let mut listener = match TcpListener::bind(&options.bind).await {
+    let listener = match TcpListener::bind(&options.bind).await {
         Ok(listener) => listener,
         Err(err) => {
             log::error!("Could not bind to {}: {}", options.bind, err);
